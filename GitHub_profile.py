@@ -61,7 +61,7 @@ def get_profile():
         #data-date="2020-04-17"
         date = day.get("data-date")
         # print(date)
-        if count != "0" or date == "2020-04-18":
+        if count != "0":
             month = (date.split('-'))[1]
             if pre_month != month:
                 print(pre_month, " : ", month_sum)

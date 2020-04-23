@@ -59,12 +59,14 @@ def get_Profile():
 
     #class="data-info d-flex item-tiling"
     item_tiling = Profile.find('div', attrs={'class': 'data-info d-flex item-tiling'})
-    print(type(item_tiling))
+    # print(type(item_tiling))
 
     information = item_tiling.find_all('dl')
     for inf in information:
         # print(type(inf.text))
-        print(inf.text.strip())
+        classification = inf.find('dt')
+        print(classification.text, end = " : ")
+        print(inf.get('title'))
 
 def get_visit(url):
     soup = get_response(url)
@@ -87,7 +89,8 @@ if __name__ == '__main__':
     all_urls = get_url()
     print('获取到的链接数:',len(all_urls))
 
-    for loop in range(10):
+    for loop in range(30):
+        get_Profile()
         for url in  all_urls:
             try:
                 get_visit(url)
