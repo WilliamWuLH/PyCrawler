@@ -41,16 +41,16 @@ def get_profile():
     soup = get_response(URLs[0])
     # print(soup)
 
-    #class="vcard-names-container float-left col-9 col-md-12 pt-1 pt-md-3 pb-1 pb-md-3 js-sticky js-user-profile-sticky-fields"
-    name = soup.find('div', attrs={'class': 'vcard-names-container float-left col-9 col-md-12 pt-1 pt-md-3 pb-1 pb-md-3 js-sticky js-user-profile-sticky-fields'})
+    #class="vcard-names pl-2 pl-md-0"
+    name = soup.find('h1', attrs={'class': 'vcard-names pl-2 pl-md-0'})
     print(name.text.strip())
 
-    #class="UnderlineNav width-full user-profile-nav js-sticky top-0"
-    nav = soup.find('div', attrs={'class': 'UnderlineNav width-full user-profile-nav js-sticky top-0'})
+    #class="flex-order-1 flex-md-order-none mt-2 mt-md-0"
+    nav = soup.find('div', attrs={'class': 'flex-order-1 flex-md-order-none mt-2 mt-md-0'})
     print(nav.text.strip().replace(' ','').replace('\n', ' '))
 
-    #class="js-calendar-graph mx-3 d-flex flex-column flex-items-end flex-xl-items-center overflow-hidden pt-1 is-graph-loading graph-canvas calendar-graph height-full text-center"
-    contributions = soup.find('div', attrs={'class': 'js-calendar-graph mx-3 d-flex flex-column flex-items-end flex-xl-items-center overflow-hidden pt-1 is-graph-loading graph-canvas calendar-graph height-full text-center'})
+    #class=js-calendar-graph mx-md-2 mx-3 d-flex flex-column flex-items-end flex-xl-items-center overflow-hidden pt-1 is-graph-loading graph-canvas calendar-graph height-full text-center
+    contributions = soup.find('div', attrs={'class': 'js-calendar-graph mx-md-2 mx-3 d-flex flex-column flex-items-end flex-xl-items-center overflow-hidden pt-1 is-graph-loading graph-canvas calendar-graph height-full text-center'})
     everyday = contributions.find_all('rect')
     sum = 0
     month_sum = 0
