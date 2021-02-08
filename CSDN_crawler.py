@@ -43,28 +43,32 @@ def get_response(url):
 
 # 爬取个人博客主页中博主的文章标题和文章链接
 def get_url():
-    # 获取博客主页的网页内容
-    soup = get_response(my_website)
-
-    # 提取出网页中的文章列表内容
-    #class="article-list"
-    article_div = soup.find('div', attrs={'class': 'article-list'})
-
-    # 提取出所有文章的信息
-    articles_titles = article_div.find_all('h4')
-
-    # 从每一条文章信息里面提取出文章的标题和链接信息
-    articles = []
-    for article_title in articles_titles:
-        articles.append(article_title.find('a'))
-
-    # 建立文章链接的集合，输出文章的标题和链接
-    # 将每一篇文章的链接 url 加入文章链接集合中
     urls = []
-    for article_url in articles:
-        print(article_url.text.strip())
-        urls.append(article_url.get("href"))
-        print('URL : ', article_url.get("href"), end = '\n\n')
+    page = 2
+    for i in range(1, page+1):
+        article_list = my_website + '/article/list/' + str(i)
+        
+        # 获取博客主页的网页内容
+        soup = get_response(article_list)
+
+        # 提取出网页中的文章列表内容
+        #class="article-list"
+        article_div = soup.find('div', attrs={'class': 'article-list'})
+
+        # 提取出所有文章的信息
+        articles_titles = article_div.find_all('h4')
+
+        # 从每一条文章信息里面提取出文章的标题和链接信息
+        articles = []
+        for article_title in articles_titles:
+            articles.append(article_title.find('a'))
+
+        # 建立文章链接的集合，输出文章的标题和链接
+        # 将每一篇文章的链接 url 加入文章链接集合中
+        for article_url in articles:
+            print(article_url.text.strip())
+            urls.append(article_url.get("href"))
+            print('URL : ', article_url.get("href"), end = '\n\n')
 
     #返回文章链接的集合
     return urls
