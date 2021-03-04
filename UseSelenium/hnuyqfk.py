@@ -128,13 +128,17 @@ class HnuYqfk(object):
         self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]').click()
         time.sleep(1)
 
-        today = self.driver.find_element(By.CLASS_NAME, "wh_item_date.wh_isToday.mark-state-0")
+        try: 
+            today = self.driver.find_element(By.CLASS_NAME, "wh_item_date.wh_isToday.mark-state-0")
 
-        if today.is_displayed():
-            today.click()
-            print('已打卡')
-            return False
-        
+            if today.is_displayed():
+                today.click()
+                print('已打卡')
+                return False
+
+        except Exception as e:
+            logging.info(e)
+
         return True
 
 if __name__ == "__main__":
