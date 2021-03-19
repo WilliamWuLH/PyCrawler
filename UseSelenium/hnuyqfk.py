@@ -1,3 +1,4 @@
+from io import BufferedRWPair
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -31,38 +32,45 @@ class HnuYqfk(object):
 
         while True:
 
-            self.driver.get(self.url)
-            time.sleep(1)
-
-            # username
-            self.driver.find_element_by_xpath('/html/body/div[1]/div/div[3]/div[1]/input').send_keys(username)
-            # password
-            self.driver.find_element_by_xpath('/html/body/div[1]/div/div[3]/div[2]/input').send_keys(password)
-            time.sleep(1)
-
-            # 验证码图片
-            while True:
-                if self.get_yzm_img():
-                    break
-
-            # OCR
-            words = ''
-            while len(words) < 4:
-                words = self.yzm_img_OCR()
-            
-            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[3]/div[3]/div/input').send_keys(words)
-            time.sleep(1)
-
-            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[3]/button').click()
-            self.driver.implicitly_wait(5)
-
             try:
-                mrdk = self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]/span')
-                if mrdk.is_displayed():
-                    break
+                self.driver.get(self.url)
+                time.sleep(1)
+
+                # username
+                self.driver.find_element_by_xpath('/html/body/div[1]/div/div[3]/div[1]/input').send_keys(username)
+                # password
+                self.driver.find_element_by_xpath('/html/body/div[1]/div/div[3]/div[2]/input').send_keys(password)
+                time.sleep(1)
+
+                # 验证码图片
+                while True:
+                    if self.get_yzm_img():
+                        break
+
+                # OCR
+                count = 0
+                words = ''
+                while len(words) < 4 and count <= 5:
+                    words = self.yzm_img_OCR()
+                    count += 1
+                
+                if count > 5:
+                    continue
+                
+                self.driver.find_element_by_xpath('//*[@id="app"]/div/div[3]/div[3]/div/input').send_keys(words)
+                time.sleep(1)
+
+                self.driver.find_element_by_xpath('//*[@id="app"]/div/div[3]/button').click()
+                
+                time.sleep(2)
+                self.driver.implicitly_wait(5)
+
+                # mrdk = self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]/span')
+                # if mrdk.is_displayed():
+                break
             
             except Exception as e:
-                logging.info(e)
+                logging.exception(e)
     
     def get_yzm_img(self):
 
@@ -100,46 +108,58 @@ class HnuYqfk(object):
         print(t_am)
         print(t_pm)
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]').click()
-        time.sleep(1)
+        try:
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]').click()
+            time.sleep(1)
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div[2]/i').click()
-        time.sleep(0.5)
-        
-        for i in range(2, 19):
-            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[2]/div[1]/ul/li[{}]'.format(i)).click()
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div[2]/i').click()
+            time.sleep(0.5)
+            
+            for i in range(2, 19):
+                self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[2]/div[1]/ul/li[{}]'.format(i)).click()
 
-        for i in range(2, 4):
-            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[2]/div[3]/ul/li[{}]'.format(i)).click()
+            for i in range(2, 4):
+                self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[2]/div[3]/ul/li[{}]'.format(i)).click()
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[1]/button[2]').click()
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[5]/div/div[1]/button[2]').click()
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div[3]/div[2]/div/input').send_keys(loc)
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[2]/div[3]/div[2]/div/input').send_keys(loc)
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[3]/div/div[2]/div[2]/input').send_keys(t_am)
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[3]/div/div[2]/div[2]/input').send_keys(t_am)
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[3]/div/div[3]/div[2]/input').send_keys(t_pm)
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/div[3]/div/div[3]/div[2]/input').send_keys(t_pm)
 
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/button').click()
-
-    def check(self):
-
-        self.driver.implicitly_wait(5)
-        self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]').click()
-        time.sleep(1)
-
-        try: 
-            today = self.driver.find_element(By.CLASS_NAME, "wh_item_date.wh_isToday.mark-state-0")
-
-            if today.is_displayed():
-                today.click()
-                print('已打卡')
-                return False
+            self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[2]/div/div[1]/div/div/div/div[2]/button').click()
 
         except Exception as e:
-            logging.info(e)
+            logging.exception(e)
 
+    def check(self):
+        while True:
+            try:
+                print('checking ...')
+                self.driver.implicitly_wait(5)
+                self.driver.find_element_by_xpath('//*[@id="app"]/div/div[2]/div[1]/div/div/div/div[1]').click()
+                time.sleep(1)
+
+            except Exception as e:
+                logging.exception(e)
+                continue
+
+            try:
+                today = self.driver.find_element(By.CLASS_NAME, "wh_item_date.wh_isToday.mark-state-0")
+
+                if today.is_displayed():
+                    today.click()
+                    print('已打卡')
+                    return False
+
+            except Exception as e:
+                print('未打卡')
+                break
+        
         return True
+
 
 if __name__ == "__main__":
 
